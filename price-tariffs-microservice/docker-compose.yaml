@@ -1,0 +1,9 @@
+services:
+  app:
+    image: 'price-tariffs:latest'
+    build:
+      context: .
+    container_name: price-tariffs
+
+    ports:
+      - "$LOCAL_PORT:7070"
