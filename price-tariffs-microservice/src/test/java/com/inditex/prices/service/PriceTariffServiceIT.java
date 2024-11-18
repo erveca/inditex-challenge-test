@@ -53,7 +53,7 @@ public class PriceTariffServiceIT {
     public void findPrice_whenProductNotExist_thenThrowExpectedException() {
         // Given
         final Instant date = Instant.now();
-        final Long productId = 35456L;
+        final Long productId = 35458L;
         final Long brandId = 1L;
 
         // When

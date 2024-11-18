@@ -189,7 +189,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
     public void findPriceTariff_whenProductNotExist_thenReturnBadRequest() {
         final FindPriceTariffRequest request = new FindPriceTariffRequest();
         request.setDate(Instant.now().toString());
-        request.setProductId("35456");
+        request.setProductId("35458");
         request.setBrandId("1");
 
         final HttpEntity<FindPriceTariffRequest> httpRequestEntity = new HttpEntity<>(request, HTTP_HEADERS);
