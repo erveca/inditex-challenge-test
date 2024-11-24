@@ -5,7 +5,6 @@ import com.inditex.prices.exception.InvalidDateException;
 import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.exception.PriceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,36 +16,28 @@ import org.springframework.web.context.request.WebRequest;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({MissingServletRequestParameterException.class, TypeMismatchException.class, PriceNotFoundException.class, InvalidDateException.class, InvalidBrandException.class, InvalidProductException.class})
-    public final ResponseEntity<String> handleException(Exception exc, WebRequest request) {
-        log.debug("Handling exception of class: " + exc.getClass().getCanonicalName());
-        final HttpHeaders headers = new HttpHeaders();
-
-        if (exc instanceof MissingServletRequestParameterException pexc) {
-            return handleMissingServletRequestParameterException(exc, headers, request, pexc.getParameterName());
-        } else if (exc instanceof PriceNotFoundException pexc) {
-            return handlePriceNotFoundException(pexc, headers, request);
-        } else if (exc instanceof InvalidDateException || exc instanceof InvalidBrandException || exc instanceof InvalidProductException) {
-            return handleInvalidValuesException(exc, headers, request);
-        }
-
-        return handleInternalException(exc, headers, request);
-    }
-
-    protected ResponseEntity<String> handlePriceNotFoundException(PriceNotFoundException exc, HttpHeaders headers, WebRequest request) {
+    @ExceptionHandler({PriceNotFoundException.class})
+    protected ResponseEntity<String> handlePriceNotFoundException(PriceNotFoundException exc, WebRequest request) {
+        log.debug("Handling " + exc.getClass().getCanonicalName());
         final String errorMessage = "Could not find a price tariff for the requested parameters";
-        return new ResponseEntity<>(errorMessage, headers, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
 
-    protected ResponseEntity<String> handleInvalidValuesException(Exception exc, HttpHeaders headers, WebRequest request) {
-        return new ResponseEntity<>(exc.getMessage(), headers, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler({InvalidDateException.class, InvalidBrandException.class, InvalidProductException.class})
+    protected ResponseEntity<String> handleInvalidValuesException(Exception exc, WebRequest request) {
+        log.debug("Handling " + exc.getClass().getCanonicalName());
+        return new ResponseEntity<>(exc.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    protected ResponseEntity<String> handleMissingServletRequestParameterException(Exception exc, HttpHeaders headers, WebRequest request, String parameterName) {
-        return new ResponseEntity<>(exc.getMessage(), headers, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler({MissingServletRequestParameterException.class})
+    protected ResponseEntity<String> handleMissingServletRequestParameterException(Exception exc, WebRequest request) {
+        log.debug("Handling " + exc.getClass().getCanonicalName());
+        return new ResponseEntity<>(exc.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
-    protected ResponseEntity<String> handleInternalException(Exception exc, HttpHeaders headers, WebRequest request) {
-        return new ResponseEntity<>(exc.getMessage(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler({RuntimeException.class})
+    protected ResponseEntity<String> handleInternalException(Exception exc, WebRequest request) {
+        log.debug("Handling " + exc.getClass().getCanonicalName());
+        return new ResponseEntity<>(exc.getMessage(), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
