@@ -1,6 +1,9 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.FindPriceTariffRequest;
+import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.exception.InvalidBrandException;
+import com.inditex.prices.exception.InvalidDateException;
 import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.exception.PriceNotFoundException;
 import com.inditex.prices.model.Brand;
@@ -52,7 +55,7 @@ public class PriceTariffServiceTest {
 
     @Test
     @DisplayName("Find Price for a non existing product throws the expected exception")
-    public void findPrice_whenProductNotExist_thenThrowExpectedException() {
+    public void findPrice_whenProductNotExist_thenThrowExpectedException() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         // Given
         final Instant date = Instant.now();
         final Long productId = 35455L;
@@ -60,10 +63,12 @@ public class PriceTariffServiceTest {
 
         Mockito.when(productRepository.existsById(productId)).thenReturn(false);
 
+        final FindPriceTariffRequest request = new FindPriceTariffRequest(date.toString(), productId.toString(), brandId.toString());
+
         // When
         final InvalidProductException exception = assertThrows(
                 InvalidProductException.class,
-                () -> priceTariffService.findPrice(date, productId, brandId),
+                () -> priceTariffService.findPrice(request),
                 "InvalidProductException was expected when product does not exist"
         );
 
@@ -77,7 +82,7 @@ public class PriceTariffServiceTest {
 
     @Test
     @DisplayName("Find Price for a non existing brand throws the expected exception")
-    public void findPrice_whenBrandNotExist_thenThrowExpectedException() {
+    public void findPrice_whenBrandNotExist_thenThrowExpectedException() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         // Given
         final Instant date = Instant.now();
         final Long productId = 35455L;
@@ -86,10 +91,12 @@ public class PriceTariffServiceTest {
         Mockito.when(productRepository.existsById(productId)).thenReturn(true);
         Mockito.when(brandRepository.existsById(brandId)).thenReturn(false);
 
+        final FindPriceTariffRequest request = new FindPriceTariffRequest(date.toString(), productId.toString(), brandId.toString());
+
         // When
         final InvalidBrandException exception = assertThrows(
                 InvalidBrandException.class,
-                () -> priceTariffService.findPrice(date, productId, brandId),
+                () -> priceTariffService.findPrice(request),
                 "InvalidBrandException was expected when brand does not exist"
         );
 
@@ -103,7 +110,7 @@ public class PriceTariffServiceTest {
 
     @Test
     @DisplayName("Find Price for a non existing applicable price throws the expected exception")
-    public void findPrice_whenProductAndBrandExist_whenNoApplicablePrices_thenThrowsExpectedException() throws PriceNotFoundException {
+    public void findPrice_whenProductAndBrandExist_whenNoApplicablePrices_thenThrowsExpectedException() throws PriceNotFoundException, InvalidDateException, InvalidBrandException, InvalidProductException {
         // Given
         final Instant date = Instant.now();
         final Long productId = 35455L;
@@ -113,10 +120,12 @@ public class PriceTariffServiceTest {
         Mockito.when(brandRepository.existsById(brandId)).thenReturn(true);
         Mockito.when(priceTariffFinderService.findPriceTariff(date, productId, brandId)).thenThrow(new PriceNotFoundException());
 
+        final FindPriceTariffRequest request = new FindPriceTariffRequest(date.toString(), productId.toString(), brandId.toString());
+
         // When
         assertThrows(
                 PriceNotFoundException.class,
-                () -> priceTariffService.findPrice(date, productId, brandId),
+                () -> priceTariffService.findPrice(request),
                 "PriceNotFoundException was expected when no applicable prices exist"
         );
 
@@ -129,7 +138,7 @@ public class PriceTariffServiceTest {
 
     @Test
     @DisplayName("Find Price when one or more applicable prices exist then the price is returned")
-    public void findPrice_whenProductAndBrandExist_whenOneOrMoreApplicablePrices_thenReturnPrice() throws PriceNotFoundException, InvalidBrandException, InvalidProductException {
+    public void findPrice_whenProductAndBrandExist_whenOneOrMoreApplicablePrices_thenReturnPrice() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
         // Given
         final Instant date = Instant.now();
         final Long productId = 35455L;
@@ -142,16 +151,17 @@ public class PriceTariffServiceTest {
         Mockito.when(brandRepository.existsById(brandId)).thenReturn(true);
         Mockito.when(priceTariffFinderService.findPriceTariff(date, productId, brandId)).thenReturn(price);
 
+        final FindPriceTariffRequest request = new FindPriceTariffRequest(date.toString(), productId.toString(), brandId.toString());
+
         // When
-        final Price priceResult = priceTariffService.findPrice(date, productId, brandId);
+        final FindPriceTariffResponse response = priceTariffService.findPrice(request);
 
         // Then
-        Assertions.assertEquals(price.getId(), priceResult.getId());
-        Assertions.assertEquals(price.getPriority(), priceResult.getPriority());
-        Assertions.assertEquals(price.getProduct().getId(), priceResult.getProduct().getId());
-        Assertions.assertEquals(price.getBrand().getId(), priceResult.getBrand().getId());
-        Assertions.assertEquals(price.getStartDate(), priceResult.getStartDate());
-        Assertions.assertEquals(price.getEndDate(), priceResult.getEndDate());
+        Assertions.assertEquals(price.getId(), response.getPriceId());
+        Assertions.assertEquals(price.getProduct().getId(), response.getProductId());
+        Assertions.assertEquals(price.getBrand().getId(), response.getBrandId());
+        Assertions.assertEquals(price.getStartDate(), response.getStartDate());
+        Assertions.assertEquals(price.getEndDate(), response.getEndDate());
 
         Mockito.verify(productRepository).existsById(productId);
         Mockito.verify(brandRepository).existsById(brandId);

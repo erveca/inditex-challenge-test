@@ -1,11 +1,9 @@
 package com.inditex.prices.rest;
 
-import com.inditex.prices.dto.FindPriceTariffRequest;
 import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidDateException;
 import com.inditex.prices.exception.InvalidProductException;
-import com.inditex.prices.exception.MissingParameterException;
 import com.inditex.prices.exception.PriceNotFoundException;
 import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.BrandRepository;
@@ -58,59 +56,39 @@ public class PriceTariffControllerIT {
     @Test
     @DisplayName("Find Price Tariff without sending date parameter throws expected exception")
     public void findPriceTariff_whenDateParameterNotSent_thenThrowsException() {
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        //request.setDate(null);
-        request.setProductId("35455");
-        request.setBrandId("1");
-
         assertThrows(
-                MissingParameterException.class,
-                () -> priceTariffController.findPriceTariff(request),
-                "MissingParameterException was expected when date parameter is missing"
+                InvalidDateException.class,
+                () -> priceTariffController.findPriceTariff(null, "35455", "1"),
+                "InvalidDateException was expected when date parameter is missing"
         );
     }
 
     @Test
     @DisplayName("Find Price Tariff without sending productId parameter throws expected exception")
     public void findPriceTariff_whenProductIdParameterNotSent_thenThrowsException() {
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(Instant.now().toString());
-        //request.setProductId(null);
-        request.setBrandId("1");
-
         assertThrows(
-                MissingParameterException.class,
-                () -> priceTariffController.findPriceTariff(request),
-                "MissingParameterException was expected when productId parameter is missing"
+                InvalidProductException.class,
+                () -> priceTariffController.findPriceTariff(Instant.now().toString(), null, "1"),
+                "InvalidProductException was expected when productId parameter is missing"
         );
     }
 
     @Test
     @DisplayName("Find Price Tariff without sending brandId parameter throws expected exception")
     public void findPriceTariff_whenBrandIdParameterNotSent_thenThrowsException() {
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(Instant.now().toString());
-        request.setProductId("35455");
-        //request.setBrandId(null);
-
         assertThrows(
-                MissingParameterException.class,
-                () -> priceTariffController.findPriceTariff(request),
-                "MissingParameterException was expected when brandId parameter is missing"
+                InvalidBrandException.class,
+                () -> priceTariffController.findPriceTariff(Instant.now().toString(), "35455", null),
+                "InvalidBrandException was expected when brandId parameter is missing"
         );
     }
 
     @Test
     @DisplayName("Find Price Tariff sending date parameter with wrong format throws expected exception")
     public void findPriceTariff_whenDateParameterSentWithWrongFormat_thenThrowsException() {
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate("ABC");
-        request.setProductId("35455");
-        request.setBrandId("1");
-
         assertThrows(
                 InvalidDateException.class,
-                () -> priceTariffController.findPriceTariff(request),
+                () -> priceTariffController.findPriceTariff("ABC", "35455", "1"),
                 "InvalidDateException was expected when date has wrong format"
         );
     }
@@ -118,14 +96,9 @@ public class PriceTariffControllerIT {
     @Test
     @DisplayName("Find Price Tariff sending productId parameter with wrong format throws expected exception")
     public void findPriceTariff_whenProductIdParameterSentWithWrongFormat_thenThrowsException() {
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(Instant.now().toString());
-        request.setProductId("ABC");
-        request.setBrandId("1");
-
         assertThrows(
                 InvalidProductException.class,
-                () -> priceTariffController.findPriceTariff(request),
+                () -> priceTariffController.findPriceTariff(Instant.now().toString(), "ABC", "1"),
                 "InvalidProductException was expected when productId parameter has wrong format"
         );
     }
@@ -133,14 +106,9 @@ public class PriceTariffControllerIT {
     @Test
     @DisplayName("Find Price Tariff sending brandId parameter with wrong format throws expected exception")
     public void findPriceTariff_whenBrandIdParameterSentWithWrongFormat_thenThrowsException() {
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(Instant.now().toString());
-        request.setProductId("35455");
-        request.setBrandId("ABC");
-
         assertThrows(
                 InvalidBrandException.class,
-                () -> priceTariffController.findPriceTariff(request),
+                () -> priceTariffController.findPriceTariff(Instant.now().toString(), "35455", "ABC"),
                 "InvalidBrandException was expected when brandId has wrong format"
         );
     }
@@ -148,37 +116,23 @@ public class PriceTariffControllerIT {
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format but no Price Tariff is found throws expected exception")
     public void findPriceTariff_whenValidRequest_whenPriceTariffNotFound_thenThrowsException() {
-        final Instant date = Instant.now();
-        final long productId = 35455L;
-        final long brandId = 1L;
-
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(Long.toString(productId));
-        request.setBrandId(Long.toString(brandId));
-
         assertThrows(
                 PriceNotFoundException.class,
-                () -> priceTariffController.findPriceTariff(request),
+                () -> priceTariffController.findPriceTariff(Instant.now().toString(), "35455", "1"),
                 "PriceNotFoundException was expected when no applicable prices exist"
         );
     }
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and a Price Tariff is found returns OK with the expected Price Tariff")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenOneApplicablePrice_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException, MissingParameterException {
+    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenOneApplicablePrice_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
         final Instant date = Instant.now();
         final Long productId = 35455L;
         final Long brandId = 1L;
 
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(productId.toString());
-        request.setBrandId(brandId.toString());
-
         final Price price = priceTariffHelper.constructAndInsertPrice(date, 1, productId, brandId, 11.11, 0);
 
-        final ResponseEntity response = priceTariffController.findPriceTariff(request);
+        final ResponseEntity response = priceTariffController.findPriceTariff(date.toString(), productId.toString(), brandId.toString());
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -196,21 +150,16 @@ public class PriceTariffControllerIT {
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and more than one applicable Price Tariffs with different priorities are found returns OK with the expected Price Tariff")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenDifferentPriorities_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException, MissingParameterException {
+    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenDifferentPriorities_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
         final Instant date = Instant.now();
         final long productId = 35455L;
         final long brandId = 1L;
-
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(Long.toString(productId));
-        request.setBrandId(Long.toString(brandId));
 
         final Price price1 = priceTariffHelper.constructAndInsertPrice(date, 1, 35455L, 1L, 11.11, 1);
         final Price price2 = priceTariffHelper.constructAndInsertPrice(date, 2, 35455L, 1L, 22.22, 2);
         final Price price3 = priceTariffHelper.constructAndInsertPrice(date, 3, 35455L, 1L, 33.33, 0);
 
-        final ResponseEntity response = priceTariffController.findPriceTariff(request);
+        final ResponseEntity response = priceTariffController.findPriceTariff(date.toString(), Long.toString(productId), Long.toString(brandId));
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -229,22 +178,17 @@ public class PriceTariffControllerIT {
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and more than one applicable Price Tariffs with same priorities are found returns OK with the expected Price Tariff")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenSamePriorities_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException, MissingParameterException {
+    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenSamePriorities_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
         final Instant date = Instant.now();
         final long productId = 35455L;
         final long brandId = 1L;
-
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(Long.toString(productId));
-        request.setBrandId(Long.toString(brandId));
 
         final Price price1 = priceTariffHelper.constructAndInsertPrice(date, 1, 35455L, 1L, 11.11, 1);
         final Price price2 = priceTariffHelper.constructAndInsertPrice(date, 2, 35455L, 1L, 22.22, 2);
         final Price price3 = priceTariffHelper.constructAndInsertPrice(date, 3, 35455L, 1L, 33.33, 0);
         final Price price4 = priceTariffHelper.constructAndInsertPrice(date, 4, 35455L, 1L, 44.44, 2);
 
-        final ResponseEntity response = priceTariffController.findPriceTariff(request);
+        final ResponseEntity response = priceTariffController.findPriceTariff(date.toString(), Long.toString(productId), Long.toString(brandId));
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
