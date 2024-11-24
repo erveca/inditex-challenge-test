@@ -1,5 +1,6 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.exception.PriceNotFoundException;
 import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.PriceRepository;
@@ -18,9 +19,10 @@ public class PriceTariffFinderJpqlService implements PriceTariffFinderServiceI {
     }
 
     @Override
-    public Price findPriceTariff(Instant date, Long productId, Long brandId) throws PriceNotFoundException {
-        return priceRepository.findApplicablePricesForDateAndProductIdAndBrandId(date, productId, brandId)
+    public PriceDto findPriceTariff(Instant date, Long productId, Long brandId) throws PriceNotFoundException {
+        final Price price = priceRepository.findApplicablePricesForDateAndProductIdAndBrandId(date, productId, brandId)
                 .stream().max(Comparator.comparingInt(Price::getPriority))
                 .orElseThrow(PriceNotFoundException::new);
+        return PriceDto.fromEntity(price);
     }
 }

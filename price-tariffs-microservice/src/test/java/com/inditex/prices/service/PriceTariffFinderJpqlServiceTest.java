@@ -1,5 +1,6 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.exception.PriceNotFoundException;
@@ -64,13 +65,13 @@ public class PriceTariffFinderJpqlServiceTest extends PriceTariffFinderServiceAb
         Mockito.when(priceRepository.findApplicablePricesForDateAndProductIdAndBrandId(date, productId, brandId)).thenReturn(List.of(price));
 
         // When
-        final Price priceResult = priceTariffFinderJpqlService.findPriceTariff(date, productId, brandId);
+        final PriceDto priceResult = priceTariffFinderJpqlService.findPriceTariff(date, productId, brandId);
 
         // Then
-        Assertions.assertEquals(price.getId(), priceResult.getId());
+        Assertions.assertEquals(price.getId(), priceResult.getPriceId());
         Assertions.assertEquals(price.getPriority(), priceResult.getPriority());
-        Assertions.assertEquals(price.getProduct().getId(), priceResult.getProduct().getId());
-        Assertions.assertEquals(price.getBrand().getId(), priceResult.getBrand().getId());
+        Assertions.assertEquals(price.getProduct().getId(), priceResult.getProductId());
+        Assertions.assertEquals(price.getBrand().getId(), priceResult.getBrandId());
         Assertions.assertEquals(price.getStartDate(), priceResult.getStartDate());
         Assertions.assertEquals(price.getEndDate(), priceResult.getEndDate());
 
@@ -93,13 +94,13 @@ public class PriceTariffFinderJpqlServiceTest extends PriceTariffFinderServiceAb
         Mockito.when(priceRepository.findApplicablePricesForDateAndProductIdAndBrandId(date, productId, brandId)).thenReturn(List.of(price1, price2, price3));
 
         // When
-        final Price priceResult = priceTariffFinderJpqlService.findPriceTariff(date, productId, brandId);
+        final PriceDto priceResult = priceTariffFinderJpqlService.findPriceTariff(date, productId, brandId);
 
         // Then
-        Assertions.assertEquals(price2.getId(), priceResult.getId());
+        Assertions.assertEquals(price2.getId(), priceResult.getPriceId());
         Assertions.assertEquals(price2.getPriority(), priceResult.getPriority());
-        Assertions.assertEquals(price2.getProduct().getId(), priceResult.getProduct().getId());
-        Assertions.assertEquals(price2.getBrand().getId(), priceResult.getBrand().getId());
+        Assertions.assertEquals(price2.getProduct().getId(), priceResult.getProductId());
+        Assertions.assertEquals(price2.getBrand().getId(), priceResult.getBrandId());
         Assertions.assertEquals(price2.getStartDate(), priceResult.getStartDate());
         Assertions.assertEquals(price2.getEndDate(), priceResult.getEndDate());
 
@@ -123,13 +124,13 @@ public class PriceTariffFinderJpqlServiceTest extends PriceTariffFinderServiceAb
         Mockito.when(priceRepository.findApplicablePricesForDateAndProductIdAndBrandId(date, productId, brandId)).thenReturn(List.of(price1, price2, price3, price4));
 
         // When
-        final Price priceResult = priceTariffFinderJpqlService.findPriceTariff(date, productId, brandId);
+        final PriceDto priceResult = priceTariffFinderJpqlService.findPriceTariff(date, productId, brandId);
 
         // Then
-        Assertions.assertEquals(price2.getId(), priceResult.getId());
+        Assertions.assertEquals(price2.getId(), priceResult.getPriceId());
         Assertions.assertEquals(price2.getPriority(), priceResult.getPriority());
-        Assertions.assertEquals(price2.getProduct().getId(), priceResult.getProduct().getId());
-        Assertions.assertEquals(price2.getBrand().getId(), priceResult.getBrand().getId());
+        Assertions.assertEquals(price2.getProduct().getId(), priceResult.getProductId());
+        Assertions.assertEquals(price2.getBrand().getId(), priceResult.getBrandId());
         Assertions.assertEquals(price2.getStartDate(), priceResult.getStartDate());
         Assertions.assertEquals(price2.getEndDate(), priceResult.getEndDate());
 

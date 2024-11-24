@@ -1,5 +1,6 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.exception.PriceNotFoundException;
 import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.PriceRepository;
@@ -62,13 +63,13 @@ public class PriceTariffFinderNativeServiceTest extends PriceTariffFinderService
         Mockito.when(priceRepository.findApplicablePriceForDateAndProductIdAndBrandId(date, productId, brandId)).thenReturn(Optional.of(price));
 
         // When
-        final Price priceResult = priceTariffFinderNativeService.findPriceTariff(date, productId, brandId);
+        final PriceDto priceResult = priceTariffFinderNativeService.findPriceTariff(date, productId, brandId);
 
         // Then
-        Assertions.assertEquals(price.getId(), priceResult.getId());
+        Assertions.assertEquals(price.getId(), priceResult.getPriceId());
         Assertions.assertEquals(price.getPriority(), priceResult.getPriority());
-        Assertions.assertEquals(price.getProduct().getId(), priceResult.getProduct().getId());
-        Assertions.assertEquals(price.getBrand().getId(), priceResult.getBrand().getId());
+        Assertions.assertEquals(price.getProduct().getId(), priceResult.getProductId());
+        Assertions.assertEquals(price.getBrand().getId(), priceResult.getBrandId());
         Assertions.assertEquals(price.getStartDate(), priceResult.getStartDate());
         Assertions.assertEquals(price.getEndDate(), priceResult.getEndDate());
 

@@ -24,4 +24,16 @@ public class FindPriceTariffResponse {
     private Double price;
 
     private Currency currency;
+
+    public static FindPriceTariffResponse fromPriceDto(PriceDto price) {
+        return FindPriceTariffResponse.builder()
+                .productId(price.getProductId())
+                .brandId(price.getBrandId())
+                .priceId(price.getPriceId())
+                .startDate(price.getStartDate())
+                .endDate(price.getEndDate())
+                .price(price.getAmount())
+                .currency(price.getCurrency())
+                .build();
+    }
 }

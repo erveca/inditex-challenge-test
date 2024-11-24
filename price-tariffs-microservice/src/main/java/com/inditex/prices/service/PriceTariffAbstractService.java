@@ -2,10 +2,10 @@ package com.inditex.prices.service;
 
 import com.inditex.prices.dto.FindPriceTariffRequest;
 import com.inditex.prices.dto.FindPriceTariffResponse;
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.exception.PriceNotFoundException;
-import com.inditex.prices.model.Price;
 
 import java.time.Instant;
 
@@ -30,17 +30,8 @@ public abstract class PriceTariffAbstractService implements PriceTariffServiceI 
         if (!checkBrandExists(findPriceTariffRequest.getBrandId())) {
             throw new InvalidBrandException("Brand does not exist");
         }
-        final Price price = searchPriceTariff(findPriceTariffRequest.getDate(), findPriceTariffRequest.getProductId(), findPriceTariffRequest.getBrandId());
-        final FindPriceTariffResponse findPriceTariffResponse = FindPriceTariffResponse.builder()
-                .productId(price.getProduct().getId())
-                .brandId(price.getBrand().getId())
-                .priceId(price.getId())
-                .startDate(price.getStartDate())
-                .endDate(price.getEndDate())
-                .price(price.getPrice())
-                .currency(price.getCurrency())
-                .build();
-        return findPriceTariffResponse;
+        final PriceDto price = searchPriceTariff(findPriceTariffRequest.getDate(), findPriceTariffRequest.getProductId(), findPriceTariffRequest.getBrandId());
+        return FindPriceTariffResponse.fromPriceDto(price);
     }
 
     /**
@@ -68,5 +59,5 @@ public abstract class PriceTariffAbstractService implements PriceTariffServiceI 
      * @return the existing highest priority Price Tariff based on the given parameters
      * @throws PriceNotFoundException if no Price Tariff is found for the given parameters.
      */
-    protected abstract Price searchPriceTariff(final Instant date, final Long productId, final Long brandId) throws PriceNotFoundException;
+    protected abstract PriceDto searchPriceTariff(final Instant date, final Long productId, final Long brandId) throws PriceNotFoundException;
 }

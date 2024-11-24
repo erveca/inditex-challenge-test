@@ -1,8 +1,8 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.exception.PriceNotFoundException;
 import com.inditex.prices.helper.ProductHelper;
-import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class PriceTariffService extends PriceTariffAbstractService {
     }
 
     @Override
-    protected Price searchPriceTariff(Instant date, Long productId, Long brandId) throws PriceNotFoundException {
+    protected PriceDto searchPriceTariff(Instant date, Long productId, Long brandId) throws PriceNotFoundException {
         return priceTariffFinderService.findPriceTariff(date, productId, brandId);
     }
 }

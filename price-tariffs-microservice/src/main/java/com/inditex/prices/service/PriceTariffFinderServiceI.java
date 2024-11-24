@@ -1,7 +1,7 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.exception.PriceNotFoundException;
-import com.inditex.prices.model.Price;
 
 import java.time.Instant;
 
@@ -18,5 +18,5 @@ public interface PriceTariffFinderServiceI {
      * @return the existing highest priority Price Tariff based on the given parameters
      * @throws PriceNotFoundException if no Price Tariff is found for the given parameters.
      */
-    Price findPriceTariff(Instant date, Long productId, Long brandId) throws PriceNotFoundException;
+    PriceDto findPriceTariff(Instant date, Long productId, Long brandId) throws PriceNotFoundException;
 }

@@ -2,14 +2,12 @@ package com.inditex.prices.service;
 
 import com.inditex.prices.dto.FindPriceTariffRequest;
 import com.inditex.prices.dto.FindPriceTariffResponse;
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidDateException;
 import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.exception.PriceNotFoundException;
-import com.inditex.prices.model.Brand;
 import com.inditex.prices.model.Currency;
-import com.inditex.prices.model.Price;
-import com.inditex.prices.model.Product;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
@@ -133,7 +131,7 @@ public class PriceTariffServiceTest {
         final Long brandId = 1L;
         final Long priceId = 1L;
 
-        final Price price = constructPrice(priceId, date, 1, productId, brandId, 0);
+        final PriceDto price = constructPrice(priceId, date, 1, productId, brandId, 0);
 
         Mockito.when(productRepository.existsById(productId)).thenReturn(true);
         Mockito.when(brandRepository.existsById(brandId)).thenReturn(true);
@@ -145,9 +143,9 @@ public class PriceTariffServiceTest {
         final FindPriceTariffResponse response = priceTariffService.findPrice(request);
 
         // Then
-        Assertions.assertEquals(price.getId(), response.getPriceId());
-        Assertions.assertEquals(price.getProduct().getId(), response.getProductId());
-        Assertions.assertEquals(price.getBrand().getId(), response.getBrandId());
+        Assertions.assertEquals(price.getPriceId(), response.getPriceId());
+        Assertions.assertEquals(price.getProductId(), response.getProductId());
+        Assertions.assertEquals(price.getBrandId(), response.getBrandId());
         Assertions.assertEquals(price.getStartDate(), response.getStartDate());
         Assertions.assertEquals(price.getEndDate(), response.getEndDate());
 
@@ -157,35 +155,21 @@ public class PriceTariffServiceTest {
         Mockito.verifyNoMoreInteractions(productRepository, brandRepository, priceTariffFinderService);
     }
 
-    private Price constructPrice(Long priceId, Instant date, int days, Long productId, Long brandId, int priority) {
-        final Product product = constructProduct(productId);
-        final Brand brand = constructBrand(brandId);
+    private PriceDto constructPrice(Long priceId, Instant date, int days, Long productId, Long brandId, int priority) {
         final Instant startDate = date.minus(days, ChronoUnit.DAYS);
         final Instant endDate = date.plus(days, ChronoUnit.DAYS);
-        return constructPrice(priceId, startDate, endDate, product, brand, priority);
+        return constructPrice(priceId, startDate, endDate, productId, brandId, priority);
     }
 
-    private Product constructProduct(Long productId) {
-        final Product product = new Product();
-        product.setId(productId);
-        return product;
-    }
-
-    private Brand constructBrand(Long brandId) {
-        final Brand brand = new Brand();
-        brand.setId(brandId);
-        return brand;
-    }
-
-    private Price constructPrice(Long priceId, Instant startDate, Instant endDate, Product product, Brand brand, int priority) {
-        final Price price = new Price();
-        price.setId(priceId);
-        price.setPriority(priority);
-        price.setCurrency(Currency.EUR);
-        price.setProduct(product);
-        price.setBrand(brand);
-        price.setStartDate(startDate);
-        price.setEndDate(endDate);
-        return price;
+    private PriceDto constructPrice(Long priceId, Instant startDate, Instant endDate, Long productId, Long brandId, int priority) {
+        return PriceDto.builder()
+                .priceId(priceId)
+                .priority(priority)
+                .currency(Currency.EUR)
+                .productId(productId)
+                .brandId(brandId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
     }
 }
