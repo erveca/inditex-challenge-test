@@ -14,8 +14,11 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +34,7 @@ public class PriceTariffFinderNativeServiceTest extends PriceTariffFinderService
     @DisplayName("Find Price for a non existing applicable price throws the expected exception")
     public void findPriceTariff_whenProductAndBrandExist_whenNoApplicablePrices_thenThrowsExpectedException() {
         // Given
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
@@ -53,7 +56,7 @@ public class PriceTariffFinderNativeServiceTest extends PriceTariffFinderService
     @DisplayName("Find Price when one or more applicable price exists then the price is returned")
     public void findPriceTariff_whenProductAndBrandExist_whenOneOrMoreApplicablePrice_thenReturnPrice() throws PriceNotFoundException {
         // Given
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
         final Long priceId = 1L;
@@ -66,12 +69,10 @@ public class PriceTariffFinderNativeServiceTest extends PriceTariffFinderService
         final PriceDto priceResult = priceTariffFinderNativeService.findPriceTariff(date, productId, brandId);
 
         // Then
-        Assertions.assertEquals(price.getId(), priceResult.getPriceId());
-        Assertions.assertEquals(price.getPriority(), priceResult.getPriority());
-        Assertions.assertEquals(price.getProduct().getId(), priceResult.getProductId());
-        Assertions.assertEquals(price.getBrand().getId(), priceResult.getBrandId());
-        Assertions.assertEquals(price.getStartDate(), priceResult.getStartDate());
-        Assertions.assertEquals(price.getEndDate(), priceResult.getEndDate());
+        assertNotNull(priceResult);
+
+        final PriceDto expectedPriceDto = constructExpectedPriceDto(price.getId(), price.getProduct().getId(), price.getBrand().getId(), price.getStartDate(), price.getEndDate(), price.getPrice(), price.getCurrency(), price.getPriority());
+        assertEquals(expectedPriceDto, priceResult);
 
         Mockito.verify(priceRepository).findApplicablePriceForDateAndProductIdAndBrandId(date, productId, brandId);
         Mockito.verifyNoMoreInteractions(priceRepository);

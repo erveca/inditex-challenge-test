@@ -4,6 +4,7 @@ import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidDateException;
 import com.inditex.prices.exception.InvalidProductException;
+import com.inditex.prices.model.Currency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -45,12 +46,9 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(1L, priceTariffResponse.getPriceId());
-        assertEquals(productId, priceTariffResponse.getProductId());
-        assertEquals(brandId, priceTariffResponse.getBrandId());
-        assertEquals("2020-06-14T00:00:00Z", priceTariffResponse.getStartDate().toString());
-        assertEquals("2020-12-31T23:59:59Z", priceTariffResponse.getEndDate().toString());
-        assertEquals(35.50, priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(1L, productId, brandId, "2020-06-14T00:00:00Z", "2020-12-31T23:59:59Z", 35.50, Currency.EUR);
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
     protected void findPriceTariff_test2() throws InvalidDateException, InvalidBrandException, InvalidProductException {
@@ -71,12 +69,9 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(2L, priceTariffResponse.getPriceId());
-        assertEquals(productId, priceTariffResponse.getProductId());
-        assertEquals(brandId, priceTariffResponse.getBrandId());
-        assertEquals("2020-06-14T15:00:00Z", priceTariffResponse.getStartDate().toString());
-        assertEquals("2020-06-14T18:30:00Z", priceTariffResponse.getEndDate().toString());
-        assertEquals(25.45, priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(2L, productId, brandId, "2020-06-14T15:00:00Z", "2020-06-14T18:30:00Z", 25.45, Currency.EUR);
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
     protected void findPriceTariff_test3() throws InvalidDateException, InvalidBrandException, InvalidProductException {
@@ -97,12 +92,9 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(1L, priceTariffResponse.getPriceId());
-        assertEquals(productId, priceTariffResponse.getProductId());
-        assertEquals(brandId, priceTariffResponse.getBrandId());
-        assertEquals("2020-06-14T00:00:00Z", priceTariffResponse.getStartDate().toString());
-        assertEquals("2020-12-31T23:59:59Z", priceTariffResponse.getEndDate().toString());
-        assertEquals(35.50, priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(1L, productId, brandId, "2020-06-14T00:00:00Z", "2020-12-31T23:59:59Z", 35.50, Currency.EUR);
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
     protected void findPriceTariff_test4() throws InvalidDateException, InvalidBrandException, InvalidProductException {
@@ -123,12 +115,9 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(3L, priceTariffResponse.getPriceId());
-        assertEquals(productId, priceTariffResponse.getProductId());
-        assertEquals(brandId, priceTariffResponse.getBrandId());
-        assertEquals("2020-06-15T00:00:00Z", priceTariffResponse.getStartDate().toString());
-        assertEquals("2020-06-15T11:00:00Z", priceTariffResponse.getEndDate().toString());
-        assertEquals(30.50, priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(3L, productId, brandId, "2020-06-15T00:00:00Z", "2020-06-15T11:00:00Z", 30.50, Currency.EUR);
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
 
@@ -150,11 +139,8 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(4L, priceTariffResponse.getPriceId());
-        assertEquals(productId, priceTariffResponse.getProductId());
-        assertEquals(brandId, priceTariffResponse.getBrandId());
-        assertEquals("2020-06-15T16:00:00Z", priceTariffResponse.getStartDate().toString());
-        assertEquals("2020-12-31T23:59:59Z", priceTariffResponse.getEndDate().toString());
-        assertEquals(38.95, priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(4L, productId, brandId, "2020-06-15T16:00:00Z", "2020-12-31T23:59:59Z", 38.95, Currency.EUR);
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 }

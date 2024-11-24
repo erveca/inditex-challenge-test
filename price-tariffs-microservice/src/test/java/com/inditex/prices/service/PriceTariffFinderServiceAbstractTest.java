@@ -1,5 +1,6 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.PriceDto;
 import com.inditex.prices.model.Brand;
 import com.inditex.prices.model.Currency;
 import com.inditex.prices.model.Price;
@@ -15,6 +16,19 @@ public class PriceTariffFinderServiceAbstractTest {
         final Instant startDate = date.minus(days, ChronoUnit.DAYS);
         final Instant endDate = date.plus(days, ChronoUnit.DAYS);
         return constructPrice(priceId, startDate, endDate, product, brand, priority);
+    }
+
+    protected PriceDto constructExpectedPriceDto(Long priceId, Long productId, Long brandId, Instant startDate, Instant endDate, Double price, Currency currency, int priority) {
+        return PriceDto.builder()
+                .priceId(priceId)
+                .productId(productId)
+                .brandId(brandId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .amount(price)
+                .currency(currency)
+                .priority(priority)
+                .build();
     }
 
     private Product constructProduct(Long productId) {

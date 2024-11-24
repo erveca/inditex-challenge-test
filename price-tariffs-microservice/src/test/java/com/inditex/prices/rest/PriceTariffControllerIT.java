@@ -1,10 +1,12 @@
 package com.inditex.prices.rest;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidDateException;
 import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.exception.PriceNotFoundException;
+import com.inditex.prices.model.Currency;
 import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.PriceRepository;
@@ -19,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -119,8 +122,8 @@ public class PriceTariffControllerIT {
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and a Price Tariff is found returns OK with the expected Price Tariff")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenOneApplicablePrice_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
-        final Instant date = Instant.now();
+    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenOneApplicablePrice_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException, JsonProcessingException {
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
@@ -134,18 +137,16 @@ public class PriceTariffControllerIT {
         assertTrue(response.getBody() instanceof FindPriceTariffResponse);
 
         final FindPriceTariffResponse priceTariffResponse = (FindPriceTariffResponse) response.getBody();
-        assertEquals(price.getId(), priceTariffResponse.getPriceId());
-        assertEquals(price.getProduct().getId(), priceTariffResponse.getProductId());
-        assertEquals(price.getBrand().getId(), priceTariffResponse.getBrandId());
-        assertEquals(price.getStartDate().toEpochMilli(), priceTariffResponse.getStartDate().toEpochMilli());
-        assertEquals(price.getEndDate().toEpochMilli(), priceTariffResponse.getEndDate().toEpochMilli());
-        assertEquals(price.getPrice(), priceTariffResponse.getPrice());
+        assertNotNull(priceTariffResponse);
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(price.getId(), price.getProduct().getId(), price.getBrand().getId(), price.getStartDate(), price.getEndDate(), price.getPrice(), price.getCurrency());
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and more than one applicable Price Tariffs with different priorities are found returns OK with the expected Price Tariff")
     public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenDifferentPriorities_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final long productId = 35455L;
         final long brandId = 1L;
 
@@ -161,19 +162,17 @@ public class PriceTariffControllerIT {
         assertTrue(response.getBody() instanceof FindPriceTariffResponse);
 
         final FindPriceTariffResponse priceTariffResponse = (FindPriceTariffResponse) response.getBody();
-        assertEquals(price2.getId(), priceTariffResponse.getPriceId());
-        assertEquals(price2.getProduct().getId(), priceTariffResponse.getProductId());
-        assertEquals(price2.getBrand().getId(), priceTariffResponse.getBrandId());
-        assertEquals(price2.getStartDate().toEpochMilli(), priceTariffResponse.getStartDate().toEpochMilli());
-        assertEquals(price2.getEndDate().toEpochMilli(), priceTariffResponse.getEndDate().toEpochMilli());
-        assertEquals(price2.getPrice(), priceTariffResponse.getPrice());
+        assertNotNull(priceTariffResponse);
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(price2.getId(), price2.getProduct().getId(), price2.getBrand().getId(), price2.getStartDate(), price2.getEndDate(), price2.getPrice(), price2.getCurrency());
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and more than one applicable Price Tariffs with same priorities are found returns OK with the expected Price Tariff")
     public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenSamePriorities_thenReturnFoundPriceAndOk() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final long productId = 35455L;
         final long brandId = 1L;
 
@@ -190,11 +189,21 @@ public class PriceTariffControllerIT {
         assertTrue(response.getBody() instanceof FindPriceTariffResponse);
 
         final FindPriceTariffResponse priceTariffResponse = (FindPriceTariffResponse) response.getBody();
-        assertEquals(price2.getId(), priceTariffResponse.getPriceId());
-        assertEquals(price2.getProduct().getId(), priceTariffResponse.getProductId());
-        assertEquals(price2.getBrand().getId(), priceTariffResponse.getBrandId());
-        assertEquals(price2.getStartDate().toEpochMilli(), priceTariffResponse.getStartDate().toEpochMilli());
-        assertEquals(price2.getEndDate().toEpochMilli(), priceTariffResponse.getEndDate().toEpochMilli());
-        assertEquals(price2.getPrice(), priceTariffResponse.getPrice());
+        assertNotNull(priceTariffResponse);
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(price2.getId(), price2.getProduct().getId(), price2.getBrand().getId(), price2.getStartDate(), price2.getEndDate(), price2.getPrice(), price2.getCurrency());
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
+    }
+
+    private FindPriceTariffResponse constructExpectedResponse(Long priceId, Long productId, Long brandId, Instant startDate, Instant endDate, Double price, Currency currency) {
+        return FindPriceTariffResponse.builder()
+                .priceId(priceId)
+                .productId(productId)
+                .brandId(brandId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .price(price)
+                .currency(currency)
+                .build();
     }
 }

@@ -7,14 +7,18 @@
 	},
 	"item": [
 		{
-			"name": "Find Price Tariff (Missing parameters)",
+			"name": "Find Price Tariff (Missing All parameters)",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Message Body is correct\", function () {\r",
-							"    pm.response.to.have.body(\"Required parameter 'date' is missing\");\r",
+							"    pm.response.to.have.body(\"Required String parameter 'date' is not present\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -22,21 +26,9 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
 					"raw": "http://localhost:7070/price-tariffs/find",
 					"protocol": "http",
@@ -47,6 +39,54 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find Price Tariff (Missing Date parameter)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message Body is correct\", function () {\r",
+							"    pm.response.to.have.body(\"Required String parameter 'date' is not present\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7070/price-tariffs/find?productId=35455&brandId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"price-tariffs",
+						"find"
+					],
+					"query": [
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -59,8 +99,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Message Body is correct\", function () {\r",
-							"    pm.response.to.have.body(\"Required parameter 'brandId' is missing\");\r",
+							"    pm.response.to.have.body(\"Required String parameter 'brandId' is not present\");\r",
 							"});"
 						],
 						"type": "text/javascript",
@@ -68,23 +112,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2024-11-09T22:00:00.000000Z\",\r\n    \"productId\": \"35455\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2024-11-09T22:00:00Z&productId=35455",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -93,6 +125,64 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2024-11-09T22:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Find Price Tariff (Missing ProductId parameter)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Message Body is correct\", function () {\r",
+							"    pm.response.to.have.body(\"Required String parameter 'productId' is not present\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:7070/price-tariffs/find?date=2024-11-09T22:00:00Z&brandId=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "7070",
+					"path": [
+						"price-tariffs",
+						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2024-11-09T22:00:00Z"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -105,6 +195,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Message Body is correct\", function () {\r",
 							"    pm.response.to.have.body(\"Brand does not exist\");\r",
 							"});"
@@ -114,23 +208,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2024-11-09T22:00:00.000000Z\",\r\n    \"productId\": \"35455\",\r\n    \"brandId\": \"12345\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2024-11-09T22:00:00Z&productId=35455&brandId=12345",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -139,6 +221,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2024-11-09T22:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "12345"
+						}
 					]
 				}
 			},
@@ -151,6 +247,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Message Body is correct\", function () {\r",
 							"    pm.response.to.have.body(\"Product does not exist\");\r",
 							"});"
@@ -160,23 +260,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2024-11-09T22:00:00.000000Z\",\r\n    \"productId\": \"2254\",\r\n    \"brandId\": \"1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2024-11-09T22:00:00Z&productId=2254&brandId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -185,6 +273,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2024-11-09T22:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "2254"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -197,6 +299,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Message Body is correct\", function () {\r",
 							"    pm.response.to.have.body(\"Could not find a price tariff for the requested parameters\");\r",
 							"});"
@@ -206,23 +312,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2024-11-09T22:00:00.000000Z\",\r\n    \"productId\": \"35455\",\r\n    \"brandId\": \"1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2024-11-09T22:00:00Z&productId=35455&brandId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -231,6 +325,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2024-11-09T22:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -243,7 +351,12 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Returns the expected Price ID\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.priceId).to.eql(1);\r",
 							"});"
@@ -253,23 +366,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2020-06-14T10:00:00.000000Z\",\r\n    \"productId\": \"35455\",\r\n    \"brandId\": \"1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2020-06-14T10:00:00Z&productId=35455&brandId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -278,6 +379,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2020-06-14T10:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -290,6 +405,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Returns the expected Price ID\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.priceId).to.eql(2);\r",
@@ -300,23 +419,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2020-06-14T16:00:00.000000Z\",\r\n    \"productId\": \"35455\",\r\n    \"brandId\": \"1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2020-06-14T16:00:00Z&productId=35455&brandId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -325,6 +432,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2020-06-14T16:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -337,6 +458,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Returns the expected Price ID\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.priceId).to.eql(1);\r",
@@ -347,23 +472,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2020-06-14T21:00:00.000000Z\",\r\n    \"productId\": \"35455\",\r\n    \"brandId\": \"1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2020-06-14T21:00:00Z&productId=35455&brandId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -372,6 +485,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2020-06-14T21:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -384,6 +511,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Returns the expected Price ID\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.priceId).to.eql(3);\r",
@@ -394,23 +525,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2020-06-15T10:00:00.000000Z\",\r\n    \"productId\": \"35455\",\r\n    \"brandId\": \"1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2020-06-15T10:00:00Z&productId=35455&brandId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -419,6 +538,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2020-06-15T10:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},
@@ -431,6 +564,10 @@
 					"listen": "test",
 					"script": {
 						"exec": [
+							"pm.test(\"Returns the expected HTTP Status\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
 							"pm.test(\"Returns the expected Price ID\", function () {\r",
 							"    var jsonData = pm.response.json();\r",
 							"    pm.expect(jsonData.priceId).to.eql(4);\r",
@@ -451,23 +588,11 @@
 					}
 				}
 			],
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"date\": \"2020-06-16T21:00:00.000000Z\",\r\n    \"productId\": \"35455\",\r\n    \"brandId\": \"1\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:7070/price-tariffs/find",
+					"raw": "http://localhost:7070/price-tariffs/find?date=2020-06-16T21:00:00Z&productId=35455&brandId=1",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -476,6 +601,20 @@
 					"path": [
 						"price-tariffs",
 						"find"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2020-06-16T21:00:00Z"
+						},
+						{
+							"key": "productId",
+							"value": "35455"
+						},
+						{
+							"key": "brandId",
+							"value": "1"
+						}
 					]
 				}
 			},

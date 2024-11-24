@@ -1,10 +1,6 @@
 package com.inditex.prices.rest;
 
-import com.inditex.prices.dto.FindPriceTariffRequest;
 import com.inditex.prices.dto.FindPriceTariffResponse;
-import com.inditex.prices.exception.InvalidBrandException;
-import com.inditex.prices.exception.InvalidDateException;
-import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.PriceRepository;
@@ -21,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +52,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff without sending date parameter returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenDateParameterNotSent_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenDateParameterNotSent_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", null);
         queryParams.put("productId", "35455");
@@ -71,7 +68,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff without sending productId parameter returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenProductIdParameterNotSent_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenProductIdParameterNotSent_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", Instant.now().toString());
         queryParams.put("productId", null);
@@ -87,7 +84,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff without sending brandId parameter returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenBrandIdParameterNotSent_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenBrandIdParameterNotSent_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", Instant.now().toString());
         queryParams.put("productId", "35455");
@@ -103,7 +100,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff sending date parameter with wrong format returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenDateParameterSentWithWrongFormat_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenDateParameterSentWithWrongFormat_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", "ABC");
         queryParams.put("productId", "35455");
@@ -119,7 +116,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff sending productId parameter with wrong format returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenProductIdParameterSentWithWrongFormat_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenProductIdParameterSentWithWrongFormat_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", Instant.now().toString());
         queryParams.put("productId", "ABC");
@@ -135,7 +132,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff sending brandId parameter with wrong format returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenBrandIdParameterSentWithWrongFormat_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenBrandIdParameterSentWithWrongFormat_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", Instant.now().toString());
         queryParams.put("productId", "35455");
@@ -151,7 +148,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff sending a non existing brand returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenBrandNotExist_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenBrandNotExist_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", Instant.now().toString());
         queryParams.put("productId", "35455");
@@ -167,7 +164,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff sending a non existing product returns BAD_REQUEST with the expected message")
-    public void findPriceTariff_whenProductNotExist_thenReturnBadRequest() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenProductNotExist_thenReturnBadRequest() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", Instant.now().toString());
         queryParams.put("productId", "35458");
@@ -183,7 +180,7 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format but no Price Tariff is found returns NOT_FOUND with the expected message")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffNotFound_thenReturnNotFound() throws InvalidDateException, InvalidBrandException, InvalidProductException {
+    public void findPriceTariff_whenValidRequest_whenPriceTariffNotFound_thenReturnNotFound() {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("date", Instant.now().toString());
         queryParams.put("productId", "35455");
@@ -199,8 +196,8 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and a Price Tariff is found returns OK with the expected Price Tariff")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenOneApplicablePrice_thenReturnFoundPriceAndOk() throws InvalidDateException, InvalidBrandException, InvalidProductException {
-        final Instant date = Instant.now();
+    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenOneApplicablePrice_thenReturnFoundPriceAndOk() {
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
@@ -219,18 +216,15 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(price.getId(), priceTariffResponse.getPriceId());
-        assertEquals(price.getProduct().getId(), priceTariffResponse.getProductId());
-        assertEquals(price.getBrand().getId(), priceTariffResponse.getBrandId());
-        assertEquals(price.getStartDate().toEpochMilli(), priceTariffResponse.getStartDate().toEpochMilli());
-        assertEquals(price.getEndDate().toEpochMilli(), priceTariffResponse.getEndDate().toEpochMilli());
-        assertEquals(price.getPrice(), priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(price.getId(), price.getProduct().getId(), price.getBrand().getId(), price.getStartDate().toString(), price.getEndDate().toString(), price.getPrice(), price.getCurrency());
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and more than one applicable Price Tariffs with different priorities are found returns OK with the expected Price Tariff")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenDifferentPriorities_thenReturnFoundPriceAndOk() throws InvalidDateException, InvalidBrandException, InvalidProductException {
-        final Instant date = Instant.now();
+    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenDifferentPriorities_thenReturnFoundPriceAndOk() {
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final long productId = 35455L;
         final long brandId = 1L;
 
@@ -238,8 +232,6 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
         queryParams.put("date", date.toString());
         queryParams.put("productId", Long.toString(productId));
         queryParams.put("brandId", Long.toString(brandId));
-
-        final FindPriceTariffRequest request = new FindPriceTariffRequest(date.toString(), Long.toString(productId), Long.toString(brandId));
 
         final Price price1 = priceTariffHelper.constructAndInsertPrice(date, 1, 35455L, 1L, 11.11, 1);
         final Price price2 = priceTariffHelper.constructAndInsertPrice(date, 2, 35455L, 1L, 22.22, 2);
@@ -253,19 +245,16 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(price2.getId(), priceTariffResponse.getPriceId());
-        assertEquals(price2.getProduct().getId(), priceTariffResponse.getProductId());
-        assertEquals(price2.getBrand().getId(), priceTariffResponse.getBrandId());
-        assertEquals(price2.getStartDate().toEpochMilli(), priceTariffResponse.getStartDate().toEpochMilli());
-        assertEquals(price2.getEndDate().toEpochMilli(), priceTariffResponse.getEndDate().toEpochMilli());
-        assertEquals(price2.getPrice(), priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(price2.getId(), price2.getProduct().getId(), price2.getBrand().getId(), price2.getStartDate().toString(), price2.getEndDate().toString(), price2.getPrice(), price2.getCurrency());
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 
 
     @Test
     @DisplayName("Find Price Tariff sending all parameters with valid format and more than one applicable Price Tariffs with same priorities are found returns OK with the expected Price Tariff")
-    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenSamePriorities_thenReturnFoundPriceAndOk() throws InvalidDateException, InvalidBrandException, InvalidProductException {
-        final Instant date = Instant.now();
+    public void findPriceTariff_whenValidRequest_whenPriceTariffFound_whenSeveralApplicablePrices_whenSamePriorities_thenReturnFoundPriceAndOk() {
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final long productId = 35455L;
         final long brandId = 1L;
 
@@ -287,11 +276,8 @@ public class PriceTariffControllerWebIT extends ControllerAbstractWebIT {
 
         final FindPriceTariffResponse priceTariffResponse = response.getBody();
         assertNotNull(priceTariffResponse);
-        assertEquals(price2.getId(), priceTariffResponse.getPriceId());
-        assertEquals(price2.getProduct().getId(), priceTariffResponse.getProductId());
-        assertEquals(price2.getBrand().getId(), priceTariffResponse.getBrandId());
-        assertEquals(price2.getStartDate().toEpochMilli(), priceTariffResponse.getStartDate().toEpochMilli());
-        assertEquals(price2.getEndDate().toEpochMilli(), priceTariffResponse.getEndDate().toEpochMilli());
-        assertEquals(price2.getPrice(), priceTariffResponse.getPrice());
+
+        final FindPriceTariffResponse expectedPriceTariffResponse = constructExpectedResponse(price2.getId(), price2.getProduct().getId(), price2.getBrand().getId(), price2.getStartDate().toString(), price2.getEndDate().toString(), price2.getPrice(), price2.getCurrency());
+        assertEquals(expectedPriceTariffResponse, priceTariffResponse);
     }
 }

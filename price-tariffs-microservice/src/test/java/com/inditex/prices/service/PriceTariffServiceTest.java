@@ -10,7 +10,6 @@ import com.inditex.prices.exception.PriceNotFoundException;
 import com.inditex.prices.model.Currency;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.ProductRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +22,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +43,7 @@ public class PriceTariffServiceTest {
     @DisplayName("Find Price for a non existing product throws the expected exception")
     public void findPrice_whenProductNotExist_thenThrowExpectedException() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         // Given
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
@@ -70,7 +70,7 @@ public class PriceTariffServiceTest {
     @DisplayName("Find Price for a non existing brand throws the expected exception")
     public void findPrice_whenBrandNotExist_thenThrowExpectedException() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         // Given
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
@@ -98,7 +98,7 @@ public class PriceTariffServiceTest {
     @DisplayName("Find Price for a non existing applicable price throws the expected exception")
     public void findPrice_whenProductAndBrandExist_whenNoApplicablePrices_thenThrowsExpectedException() throws PriceNotFoundException, InvalidDateException, InvalidBrandException, InvalidProductException {
         // Given
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
@@ -126,7 +126,7 @@ public class PriceTariffServiceTest {
     @DisplayName("Find Price when one or more applicable prices exist then the price is returned")
     public void findPrice_whenProductAndBrandExist_whenOneOrMoreApplicablePrices_thenReturnPrice() throws PriceNotFoundException, InvalidBrandException, InvalidProductException, InvalidDateException {
         // Given
-        final Instant date = Instant.now();
+        final Instant date = Instant.now().truncatedTo(ChronoUnit.SECONDS);
         final Long productId = 35455L;
         final Long brandId = 1L;
         final Long priceId = 1L;
@@ -143,11 +143,10 @@ public class PriceTariffServiceTest {
         final FindPriceTariffResponse response = priceTariffService.findPrice(request);
 
         // Then
-        Assertions.assertEquals(price.getPriceId(), response.getPriceId());
-        Assertions.assertEquals(price.getProductId(), response.getProductId());
-        Assertions.assertEquals(price.getBrandId(), response.getBrandId());
-        Assertions.assertEquals(price.getStartDate(), response.getStartDate());
-        Assertions.assertEquals(price.getEndDate(), response.getEndDate());
+        assertNotNull(response);
+
+        final FindPriceTariffResponse expectedResponse = constructExpectedResponse(price.getPriceId(), price.getProductId(), price.getBrandId(), price.getStartDate(), price.getEndDate(), price.getAmount(), price.getCurrency());
+        assertEquals(expectedResponse, response);
 
         Mockito.verify(productRepository).existsById(productId);
         Mockito.verify(brandRepository).existsById(brandId);
@@ -170,6 +169,18 @@ public class PriceTariffServiceTest {
                 .brandId(brandId)
                 .startDate(startDate)
                 .endDate(endDate)
+                .build();
+    }
+
+    private FindPriceTariffResponse constructExpectedResponse(Long priceId, Long productId, Long brandId, Instant startDate, Instant endDate, Double price, Currency currency) {
+        return FindPriceTariffResponse.builder()
+                .priceId(priceId)
+                .productId(productId)
+                .brandId(brandId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .price(price)
+                .currency(currency)
                 .build();
     }
 }
