@@ -1,43 +1,33 @@
 package com.inditex.prices.rest;
 
-import com.inditex.prices.dto.FindPriceTariffRequest;
 import com.inditex.prices.dto.FindPriceTariffResponse;
+import com.inditex.prices.exception.InvalidBrandException;
+import com.inditex.prices.exception.InvalidDateException;
+import com.inditex.prices.exception.InvalidProductException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.TestPropertySource;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class PriceTariffControllerForChallengeWebIT extends ControllerAbstractWebIT {
-    private static final HttpHeaders HTTP_HEADERS = new HttpHeaders();
-
     @LocalServerPort
     private int port;
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    static {
-        HTTP_HEADERS.set("Content-Type", "application/json");
-    }
 
     @BeforeAll
     public static void setup() {
@@ -45,21 +35,19 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
 
     @BeforeEach
     public void setupEach() {
-        restTemplate.getRestTemplate().setRequestFactory(new CustomHttpComponentsClientHttpRequestFactory());
     }
 
-    protected void findPriceTariff_test1() {
+    protected void findPriceTariff_test1() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         final Instant date = LocalDateTime.of(2020, 6, 14, 10, 0, 0).toInstant(ZoneOffset.UTC);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(productId.toString());
-        request.setBrandId(brandId.toString());
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("date", date.toString());
+        queryParams.put("productId", productId.toString());
+        queryParams.put("brandId", brandId.toString());
 
-        final HttpEntity<FindPriceTariffRequest> httpRequestEntity = new HttpEntity<>(request, HTTP_HEADERS);
-        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.exchange(constructUrl(port), HttpMethod.GET, httpRequestEntity, FindPriceTariffResponse.class);
+        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.getForEntity(constructUrl(port, queryParams), FindPriceTariffResponse.class, queryParams);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -75,18 +63,17 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
         assertEquals(35.50, priceTariffResponse.getPrice());
     }
 
-    protected void findPriceTariff_test2() {
+    protected void findPriceTariff_test2() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         final Instant date = LocalDateTime.of(2020, 6, 14, 16, 0, 0).toInstant(ZoneOffset.UTC);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(productId.toString());
-        request.setBrandId(brandId.toString());
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("date", date.toString());
+        queryParams.put("productId", productId.toString());
+        queryParams.put("brandId", brandId.toString());
 
-        final HttpEntity<FindPriceTariffRequest> httpRequestEntity = new HttpEntity<>(request, HTTP_HEADERS);
-        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.exchange(constructUrl(port), HttpMethod.GET, httpRequestEntity, FindPriceTariffResponse.class);
+        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.getForEntity(constructUrl(port, queryParams), FindPriceTariffResponse.class, queryParams);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -102,18 +89,17 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
         assertEquals(25.45, priceTariffResponse.getPrice());
     }
 
-    protected void findPriceTariff_test3() {
+    protected void findPriceTariff_test3() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         final Instant date = LocalDateTime.of(2020, 6, 14, 21, 0, 0).toInstant(ZoneOffset.UTC);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(productId.toString());
-        request.setBrandId(brandId.toString());
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("date", date.toString());
+        queryParams.put("productId", productId.toString());
+        queryParams.put("brandId", brandId.toString());
 
-        final HttpEntity<FindPriceTariffRequest> httpRequestEntity = new HttpEntity<>(request, HTTP_HEADERS);
-        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.exchange(constructUrl(port), HttpMethod.GET, httpRequestEntity, FindPriceTariffResponse.class);
+        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.getForEntity(constructUrl(port, queryParams), FindPriceTariffResponse.class, queryParams);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -129,18 +115,17 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
         assertEquals(35.50, priceTariffResponse.getPrice());
     }
 
-    protected void findPriceTariff_test4() {
+    protected void findPriceTariff_test4() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         final Instant date = LocalDateTime.of(2020, 6, 15, 10, 0, 0).toInstant(ZoneOffset.UTC);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(productId.toString());
-        request.setBrandId(brandId.toString());
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("date", date.toString());
+        queryParams.put("productId", productId.toString());
+        queryParams.put("brandId", brandId.toString());
 
-        final HttpEntity<FindPriceTariffRequest> httpRequestEntity = new HttpEntity<>(request, HTTP_HEADERS);
-        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.exchange(constructUrl(port), HttpMethod.GET, httpRequestEntity, FindPriceTariffResponse.class);
+        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.getForEntity(constructUrl(port, queryParams), FindPriceTariffResponse.class, queryParams);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -157,18 +142,17 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
     }
 
 
-    protected void findPriceTariff_test5() {
+    protected void findPriceTariff_test5() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         final Instant date = LocalDateTime.of(2020, 6, 16, 21, 0, 0).toInstant(ZoneOffset.UTC);
         final Long productId = 35455L;
         final Long brandId = 1L;
 
-        final FindPriceTariffRequest request = new FindPriceTariffRequest();
-        request.setDate(date.toString());
-        request.setProductId(productId.toString());
-        request.setBrandId(brandId.toString());
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("date", date.toString());
+        queryParams.put("productId", productId.toString());
+        queryParams.put("brandId", brandId.toString());
 
-        final HttpEntity<FindPriceTariffRequest> httpRequestEntity = new HttpEntity<>(request, HTTP_HEADERS);
-        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.exchange(constructUrl(port), HttpMethod.GET, httpRequestEntity, FindPriceTariffResponse.class);
+        final ResponseEntity<FindPriceTariffResponse> response = restTemplate.getForEntity(constructUrl(port, queryParams), FindPriceTariffResponse.class, queryParams);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());

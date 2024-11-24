@@ -1,5 +1,7 @@
 package com.inditex.prices.service;
 
+import com.inditex.prices.dto.FindPriceTariffRequest;
+import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidProductException;
 import com.inditex.prices.exception.PriceNotFoundException;
@@ -14,23 +16,31 @@ public abstract class PriceTariffAbstractService implements PriceTariffServiceI 
     /**
      * Searches for the applicable Price Tariff in the database.
      *
-     * @param date      the date
-     * @param productId the product ID
-     * @param brandId   the brand ID
+     * @param findPriceTariffRequest request object wrapping the date, product ID and brand ID for the search.
      * @return the existing highest priority Price Tariff based on the given parameters
      * @throws InvalidProductException if the given product does not exist
      * @throws InvalidBrandException   if the given brand does not exist
      * @throws PriceNotFoundException  if no Price Tariff is found for the given parameters.
      */
     @Override
-    public Price findPrice(final Instant date, final Long productId, final Long brandId) throws InvalidProductException, InvalidBrandException, PriceNotFoundException {
-        if (!checkProductExists(productId)) {
+    public FindPriceTariffResponse findPrice(final FindPriceTariffRequest findPriceTariffRequest) throws InvalidProductException, InvalidBrandException, PriceNotFoundException {
+        if (!checkProductExists(findPriceTariffRequest.getProductId())) {
             throw new InvalidProductException("Product does not exist");
         }
-        if (!checkBrandExists(brandId)) {
+        if (!checkBrandExists(findPriceTariffRequest.getBrandId())) {
             throw new InvalidBrandException("Brand does not exist");
         }
-        return searchPriceTariff(date, productId, brandId);
+        final Price price = searchPriceTariff(findPriceTariffRequest.getDate(), findPriceTariffRequest.getProductId(), findPriceTariffRequest.getBrandId());
+        final FindPriceTariffResponse findPriceTariffResponse = FindPriceTariffResponse.builder()
+                .productId(price.getProduct().getId())
+                .brandId(price.getBrand().getId())
+                .priceId(price.getId())
+                .startDate(price.getStartDate())
+                .endDate(price.getEndDate())
+                .price(price.getPrice())
+                .currency(price.getCurrency())
+                .build();
+        return findPriceTariffResponse;
     }
 
     /**
