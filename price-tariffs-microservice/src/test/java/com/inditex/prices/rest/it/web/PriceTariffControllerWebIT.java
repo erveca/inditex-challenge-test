@@ -1,10 +1,11 @@
-package com.inditex.prices.rest;
+package com.inditex.prices.rest.it.web;
 
 import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.PriceRepository;
 import com.inditex.prices.repository.ProductRepository;
+import com.inditex.prices.rest.it.web.ControllerAbstractWebIT;
 import com.inditex.prices.util.PriceTariffHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

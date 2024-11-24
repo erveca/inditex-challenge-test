@@ -1,4 +1,4 @@
-package com.inditex.prices.rest;
+package com.inditex.prices.rest.it;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.inditex.prices.dto.FindPriceTariffResponse;
@@ -11,6 +11,7 @@ import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.PriceRepository;
 import com.inditex.prices.repository.ProductRepository;
+import com.inditex.prices.rest.PriceTariffController;
 import com.inditex.prices.util.PriceTariffHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

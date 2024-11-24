@@ -1,4 +1,4 @@
-package com.inditex.prices.rest;
+package com.inditex.prices.rest.it.web;
 
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidDateException;
@@ -11,8 +11,8 @@ import org.springframework.test.context.TestPropertySource;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource(properties = {"priceTariffFinderService=native"})
-public class PriceTariffControllerForChallengeNativeWebIT extends PriceTariffControllerForChallengeWebIT {
+@TestPropertySource("classpath:application-jpql.properties")
+public class PriceTariffControllerForChallengeJpqlWebIT extends PriceTariffControllerForChallengeWebIT {
     @Test
     @DisplayName("Test 1: petición a las 10:00 del día 14 del producto 35455 para la brand 1 (ZARA)")
     public void findPriceTariff_test1() throws InvalidDateException, InvalidBrandException, InvalidProductException {

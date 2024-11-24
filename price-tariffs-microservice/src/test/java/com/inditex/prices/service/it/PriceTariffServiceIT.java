@@ -1,4 +1,4 @@
-package com.inditex.prices.service;
+package com.inditex.prices.service.it;
 
 import com.inditex.prices.dto.FindPriceTariffRequest;
 import com.inditex.prices.dto.FindPriceTariffResponse;
@@ -11,6 +11,7 @@ import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.PriceRepository;
 import com.inditex.prices.repository.ProductRepository;
+import com.inditex.prices.service.PriceTariffService;
 import com.inditex.prices.util.PriceTariffHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

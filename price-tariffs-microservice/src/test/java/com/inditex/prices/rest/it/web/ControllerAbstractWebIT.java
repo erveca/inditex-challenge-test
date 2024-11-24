@@ -1,4 +1,4 @@
-package com.inditex.prices.rest;
+package com.inditex.prices.rest.it.web;
 
 import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.model.Currency;
