@@ -4,8 +4,6 @@ import com.inditex.prices.dto.FindPriceTariffResponse;
 import com.inditex.prices.exception.InvalidBrandException;
 import com.inditex.prices.exception.InvalidDateException;
 import com.inditex.prices.exception.InvalidProductException;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -28,14 +26,6 @@ public abstract class PriceTariffControllerForChallengeWebIT extends ControllerA
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @BeforeAll
-    public static void setup() {
-    }
-
-    @BeforeEach
-    public void setupEach() {
-    }
 
     protected void findPriceTariff_test1() throws InvalidDateException, InvalidBrandException, InvalidProductException {
         final Instant date = LocalDateTime.of(2020, 6, 14, 10, 0, 0).toInstant(ZoneOffset.UTC);

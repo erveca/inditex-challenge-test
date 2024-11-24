@@ -13,8 +13,6 @@ import com.inditex.prices.model.Product;
 import com.inditex.prices.repository.BrandRepository;
 import com.inditex.prices.repository.ProductRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,16 +40,6 @@ public class PriceTariffServiceTest {
 
     @InjectMocks
     private PriceTariffService priceTariffService;
-
-    @BeforeAll
-    public static void setup() {
-
-    }
-
-    @BeforeEach
-    public void setupEach() {
-
-    }
 
     @Test
     @DisplayName("Find Price for a non existing product throws the expected exception")

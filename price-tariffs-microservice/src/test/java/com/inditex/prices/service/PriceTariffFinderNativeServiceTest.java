@@ -4,8 +4,6 @@ import com.inditex.prices.exception.PriceNotFoundException;
 import com.inditex.prices.model.Price;
 import com.inditex.prices.repository.PriceRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,15 +25,6 @@ public class PriceTariffFinderNativeServiceTest extends PriceTariffFinderService
     @InjectMocks
     private PriceTariffFinderNativeService priceTariffFinderNativeService;
 
-    @BeforeAll
-    public static void setup() {
-
-    }
-
-    @BeforeEach
-    public void setupEach() {
-
-    }
 
     @Test
     @DisplayName("Find Price for a non existing applicable price throws the expected exception")

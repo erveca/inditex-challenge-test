@@ -12,7 +12,6 @@ import com.inditex.prices.repository.PriceRepository;
 import com.inditex.prices.repository.ProductRepository;
 import com.inditex.prices.util.PriceTariffHelper;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,11 +38,6 @@ public class PriceTariffServiceIT {
     private PriceTariffService priceTariffService;
 
     private PriceTariffHelper priceTariffHelper;
-
-    @BeforeAll
-    public static void setup() {
-
-    }
 
     @BeforeEach
     public void setupEach() {
